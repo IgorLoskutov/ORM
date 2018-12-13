@@ -41,7 +41,20 @@ class Entity(object):
         #    columns, parents, children or siblings and call corresponding
         #    getter with name as an argument
         # throw an exception, if attribute is unrecognized
-        pass
+        if self.__modified:
+            raise DatabaseError()
+
+        self.__load()
+        if name in self._columns:
+            return self._get_column(name)
+        if name in self._parents:
+            return self._get_parent(name)
+        if name in self._children:
+            return self._get_children(name)
+        if name in self._siblings:
+            return self._get_siblings(name)
+        raise AttributeError()
+        
 
     def __setattr__(self, name, value):
         # check, if requested property name is in current class
